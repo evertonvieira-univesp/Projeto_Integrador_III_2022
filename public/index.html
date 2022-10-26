@@ -1,16 +1,163 @@
-<html>
+<!doctype html>
+<html lang="pt-br">
 
-<head>
-	<meta charset="utf-8"/>
-	<title>GGL Leaflet Webmap Tutorial</title>
+  <head>
+      	<meta charset="utf-8"/>
+	<title>Projeto Integrador III</title>
 	<link rel="stylesheet" href="stylesheets/style.css">
 	<link rel="stylesheet" href="stylesheets/leaflet.css">
-</head>
 
-<body>
-	<div id="map"></div>
-	<script src="javascripts/webmap.js" charset="utf-8"></script>
-</body>
+     <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
+    integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
+    crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
+    integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
+    crossorigin="">
+    </script>
+    <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet-src.js"
+            integrity="sha512-WXoSHqw/t26DszhdMhOXOkI7qCiv5QWXhH9R7CgvgZMHz1ImlkVQ3uNsiQKu5wwbbxtPzFXd1hK4tzno2VqhpA=="
+            crossorigin=""></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol/dist/L.Control.Locate.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol/dist/L.Control.Locate.min.js" charset="utf-8"></script>
+
+    <link rel="stylesheet" href="static/css/style.css" >
+    <link rel="stylesheet" href="static/css/style-mobile.css" >
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+
+
+      <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.css" />
+      <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.3.0/dist/MarkerCluster.Default.css" />
+      <script src="https://unpkg.com/leaflet.markercluster@1.3.0/dist/leaflet.markercluster.js"></script>
+  <title>{% block title %} {% endblock %}</title>
+  </head>
+   <body>
+
+
+
+
+   <nav class="navbar navbar-expand-md navbar-dark" style="background-color: rgba(27,104,156,0.8);" >
+        <a class="navbar-brand" href="{{ url_for('index')}}">Início</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+
+                <li class="nav-item">
+                <a class="nav-link" href="{{url_for('aprofundando')}}">Aprofundando o Tema</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="{{url_for('sobreNos')}}">Sobre Nós</a>
+            </li>
+
+            </ul>
+        </div>
+    </nav>
+    <div>
+        {% for message in get_flashed_messages() %}
+        <div class="alert alert-danger">{{ message }}</div>
+    {% endfor %}
+        {% block content %} {% endblock %}
+
+    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  </body>
+
+ <br>
+
+    <section class="container" id="corpo-inicio">
+
+    <br>
+
+
+        <p></p>
+        <p1>Este projeto foi desenvolvido para realizar um levantamento da ocorrência de contatos com carrapatos na
+            cidade de Piracicaba-SP.</p1>
+        <br>
+        <br>
+        <p3>Para informar um contato clique no botão abaixo: </p3>
+        <br>
+        <div class="table-btn">
+            <div class="row-btn">
+                <a href="/create" class="btn btn-primary btn-lg active cell-btn"  role=/create.html aria-pressed="true">Registre sua ocorrência</a>
+
+            </div>
+        </div>
+        <div>
+            <div id="map"></div>
+
+            <script>
+                var map = L.map('map').setView([-22.72530680770728, -47.64942216337267], 11.5);
+
+                L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+                attribution: 'Map data copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+                minZoom: 11.5,
+                maxZoom: 15,
+                id: 'mapbox/streets-v11',
+                tileSize: 512,
+                zoomOffset: -1,
+                accessToken: 'pk.eyJ1IjoicG9uY2VnaCIsImEiOiJjbDJvMWhncm4wMW04M2NtajdscHlib285In0.UfM2xByqa_5RqYcTEVcOhQ'
+                }).addTo(map);
+
+                var Geo_pontos = '{{Geo_pontos}}';
+                Geo_pontos = Geo_pontos.replaceAll("[([",'')
+                Geo_pontos = Geo_pontos.replaceAll("],)]",'')
+                Geo_pontos = Geo_pontos.split("],), ([")
+                Geo_pontos = Array.from(Geo_pontos)
+
+                var markers = new L.markerClusterGroup();
+
+                for (var i = 0; i < Geo_pontos.length; i++) {
+                    var linha_geo = Geo_pontos[i];
+                    linha_geo = linha_geo.replaceAll("'","")
+                    linha_geo = linha_geo.split(", ")
+                    linha_geo = Array.from(linha_geo)
+                    var title = linha_geo[2];
+                    tipo = linha_geo[3];
+                    data = linha_geo[4];
+                    var marker = L.marker(new L.LatLng(linha_geo[0], linha_geo[1]), { tipo: tipo }, {data: data});
+                    marker.bindPopup(tipo.slice(5,-2) + ''+ data.slice(4,-2));
+                    markers.addLayer(marker);
+                }
+
+                map.addLayer(markers);
+
+
+
+
+                var popup = L.popup();
+
+                var hotText = 'Clique aqui.';
+                var URL = '/create';
+
+
+                function onMapClick(e) {
+                  popup
+                    .setLatLng(e.latlng)
+                    .setContent("Deseja adicionar uma ocorrência?"+hotText.link(URL))
+
+                    .openOn(map);
+                    }
+
+                    map.on('click', onMapClick);
+
+                L.control.locate().addTo(map);
+
+            </script>
+        </div>
+    </section>
 
 </html>
+
